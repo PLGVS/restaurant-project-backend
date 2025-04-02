@@ -21,7 +21,7 @@ public class Reservation {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime reservationDate;
 
-    public Reservation(String name, int peopleQtt, LocalDateTime reservationDate, String table) {
+    public Reservation(String name, int peopleQtt, LocalDateTime reservationDate) {
             if (reservationDate.isBefore(LocalDateTime.now())){
                 throw new InvalidReservationDate("Reservation date is before the actual date!");
             }
@@ -30,7 +30,7 @@ public class Reservation {
             this.peopleQtt = peopleQtt;
             this.requestDate = LocalDateTime.now();
             this.reservationDate = reservationDate;
-            this.table = table;
+            this.table = null;
     }
 
     @Override
