@@ -12,6 +12,7 @@ public class Reservation {
     private static int SEQUENCIAL = 1;
     private int id;
     private String name;
+    private String email;
     private int peopleQtt;
     private String table;
 
@@ -21,12 +22,13 @@ public class Reservation {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime reservationDate;
 
-    public Reservation(String name, int peopleQtt, LocalDateTime reservationDate) {
+    public Reservation(String name, String email, int peopleQtt, LocalDateTime reservationDate) {
             if (reservationDate.isBefore(LocalDateTime.now())){
                 throw new InvalidReservationDate("Reservation date is before the actual date!");
             }
             this.id = SEQUENCIAL++;
             this.name = name;
+            this.email = email;
             this.peopleQtt = peopleQtt;
             this.requestDate = LocalDateTime.now();
             this.reservationDate = reservationDate;
@@ -52,6 +54,10 @@ public class Reservation {
         return name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public int getPeopleQtt() {
         return peopleQtt;
     }
@@ -73,9 +79,10 @@ public class Reservation {
     }
 
     public String showReservation(){
-        return  "Reservation number: " + this.id + "\n"
+        return "Reservation number: " + this.id + "\n"
                 + "Table number: " + this.table + "\n"
                 + "Name: " + this.name + "\n"
+                + "Email: " + this.email + "\n"
                 + "People quantity: " + this.peopleQtt + "\n"
                 + "Request date: " + this.requestDate.format(dtf) + "\n"
                 + "Reservation date: " + this.reservationDate.format(dtf);
