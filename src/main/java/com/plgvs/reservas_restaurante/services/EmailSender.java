@@ -286,6 +286,12 @@ public class EmailSender {
                                              </td>
                                            </tr>
                                            <tr>
+                                               <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                                   <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:left;color:#525252;">Table number: """ + req.getTableNumber() + """
+                                                   </div>
+                                               </td>
+                                           </tr>
+                                           <tr>
                                              <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                                <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:left;color:#525252;">Persons: """ + req.getPersonsNumber() + """
                                              </div>

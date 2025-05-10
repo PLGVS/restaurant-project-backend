@@ -6,6 +6,7 @@ import com.plgvs.reservas_restaurante.entities.Customers;
 import com.plgvs.reservas_restaurante.entities.Reservations;
 import com.plgvs.reservas_restaurante.entities.Tables;
 import com.plgvs.reservas_restaurante.entities.UnavailableTimes;
+import com.plgvs.reservas_restaurante.exceptions.InvalidReservationDate;
 import com.plgvs.reservas_restaurante.exceptions.InvalidReservationTime;
 import com.plgvs.reservas_restaurante.exceptions.UnavaialbleTable;
 import com.plgvs.reservas_restaurante.repositories.*;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -82,45 +84,36 @@ public class ReservationService {
         List<String> validTimes = List.of("17:00", "20:00", "23:00");
 
         boolean tableAvailable = true;
-        if (validTimes.contains(req.getReservationTime())){
-            for (UnavailableTimes t : times){
-                System.out.println(t.getTime());
-                System.out.println(reservationTime);
-                if (t.getTime() == reservationTime){
-                    System.out.println("Falso");
-                    tableAvailable = false;
-                    break;
+        if (!reservationDate.before(new Date())) {
+            if (validTimes.contains(req.getReservationTime())) {
+                for (UnavailableTimes t : times) {
+                    System.out.println(t.getTime());
+                    System.out.println(reservationTime);
+                    if (t.getTime() == reservationTime) {
+                        System.out.println("Falso");
+                        tableAvailable = false;
+                        break;
+                    }
                 }
+            } else {
+                throw new InvalidReservationTime("Invalid time!");
             }
+
+            if (tableAvailable) {
+                customersRepository.save(customer);
+                tablesRepository.save(table);
+                reservationsRepository.save(reservation);
+                unavailableTimesRepository.save(unavailableTimes);
+                System.out.println("Reservation saved");
+                return;
+            }
+
+            throw new InvalidReservationTime("Unavailable table in this time!");
         }
-        else {
-            throw new InvalidReservationTime("Invalid time!");
-        }
-
-        if (tableAvailable){
-            customersRepository.save(customer);
-            tablesRepository.save(table);
-            reservationsRepository.save(reservation);
-            unavailableTimesRepository.save(unavailableTimes);
-            System.out.println("Reservation saved");
-            return;
-        }
-
-        throw new InvalidReservationTime("Unavailable table in this time!");
 
 
-//        for (Reservations r : reservations) {
-//            System.out.println("Comparando: " + parsedDate1 + " com " + r.getReservationDate());
-//            System.out.println("Table Available? " + tableAvailable);
-//            Duration duration = Duration.between(parsedDate1, r.getReservationTime());
-//            if (Math.abs(duration.toHours()) < 3) {
-//                tableAvailable = false;
-//            }
-//        }
-//
-//        if (tableAvailable){
-//
-//        }
+        throw new InvalidReservationDate("The date is before the actual date!");
+
     }
 
     public Reservation searchReservation(String id){
